@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include <fstream>
+
+//c++ program to calculate simple poisson eqn in cylindrical coords
+
+int main()
+{
+  using namespace std;
+
+  ofstream outf("Sample.dat");
+
+ 
+ double v0 = 10; //value of +V
+ double vminus=-v0; //value of -V
+
+ double d=10; //distance between plates
+ double h=10; //height of plates
+
+ double r=1; //radius of circle
+
+ double dx=1; //grid spacing
+ double dy=1; //grid spacing
+
+ double dt=1; //iteration step size
+ double tmax=10.0; //iteration stop point
+ int tstep = tmax/dt; //number of iterations
+
+ int xstep= d/dx;
+ int ystep = h/dy;
+
+ double u[tstep][ystep][xstep]; //multidimensional array
+
+ //boundary conditions 
+
+  for (int j=1;j<ystep;j++) {
+  u[tstep][j][1]=v0;
+  u[tstep][j][xstep]=vminus;
+  }
+
+
+  
+ outf<< "Table of electric Potential at different positions of (r, angle(degrees)) at max  time:"<<endl; 
+
+  for ( int j = 0; j < ystep; j++ ) {
+   for ( int k = 0; k < ystep; k++ ) {
+    
+     outf<< "("<<j<<","<<k<<")"<<u[tstep][j][k] <<endl;  
+   }
+   }
+
+    return 0;
+}
+
