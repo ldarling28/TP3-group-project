@@ -14,41 +14,71 @@ int main()
   ofstream outf("Sample.dat");
 
  
- double v0 = 10; //value of +V
- double vminus=-v0; //value of -V
+ double v0 = 10.0; //value of +V
+ double vminus=-10.0; //value of -V
 
- double d=10; //distance between plates
- double h=10; //height of plates
+ double d=100.0; //distance between plates
+ double h=100.0; //height of plates
 
- double r=1; //radius of circle
+ double r=10.0; //radius of circle
 
- double dx=1; //grid spacing
- double dy=1; //grid spacing
+ double dx=1.0; //grid spacing
+ double dy=1.0; //grid spacing
 
- double dt=1; //iteration step size
+ double dt=1.0; //iteration step size
  double tmax=10.0; //iteration stop point
  int tstep = tmax/dt; //number of iterations
 
  int xstep= d/dx;
  int ystep = h/dy;
 
- double u[tstep][ystep][xstep]; //multidimensional array
+ double u[xstep+2][ystep+2]; //multidimensional array
+ double unew[xstep+2][ystep+2];
 
  //boundary conditions 
 
-  for (int j=1;j<ystep;j++) {
-  u[tstep][j][1]=v0;
-  u[tstep][j][xstep]=vminus;
+ for (int j=0;j<(xstep+2);j++) {
+   for (int k=0; k<(ystep+2);k++){
+     if (j==0)
+       u[j][k]=v0;
+     else if (j==(xstep+1))
+	      u[j][k]=vminus;
+
+     //Boundary conditions at max and min height ???
+     //else if (etc)
+   
+	      else
+		u[j][k]=0;
+}
   }
 
+ 
+ for (int n=0; n<tstep;n++){
+ for (int j=1; j<(xstep+1); j++){
+   for (int k=1;k<(ystep+1);k++){
 
-  
+     //Inner circle zero - equation not correct 
+     if ((pow((k-0.5*h),2) + pow((j-0.5*d),2))< pow(r,2)) 
+       unew[j][k]=0;      
+     
+     else unew[j][k]=(0.25)*(u[j-1][k] + u[j+1][k] + u[j][k-1] + u[j][k+1]);
+
+	    }
+ }
+
+for (int j=1; j<(xstep+1); j++){
+   for (int k=1;k<(ystep+1);k++){
+ u[j][k]=unew[j][k];
+ }
+ }
+ }
+ 
  outf<< "Table of electric Potential at different positions of (r, angle(degrees)) at max  time:"<<endl; 
 
-  for ( int j = 0; j < ystep; j++ ) {
-   for ( int k = 0; k < ystep; k++ ) {
+  for ( int j = 0; j < xstep+2; j++ ) {
+   for ( int k = 0; k < ystep+2; k++ ) {
     
-     outf<< "("<<j<<","<<k<<")"<<u[tstep][j][k] <<endl;  
+     outf<< "("<<j<<","<<k<<")"<<u[j][k] <<endl;  
    }
    }
 
