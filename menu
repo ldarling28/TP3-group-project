@@ -1,0 +1,35 @@
+#!/bin/bash
+
+printf "1   Graph system 1\n2   Graph system 2\n"
+
+
+read SYSTEM
+
+case $SYSTEM in
+
+    1)
+
+./sys1
+gnuplot -persist <<EOF
+ set datafile separator ","
+ set view map
+ set size square
+ set title "System $SYSTEM"
+ splot "sys$SYSTEM.dat" using 1:2:3 with points palette pointsize 3 pointtype 7
+EOF
+;;
+
+    2)
+./sys2
+
+gnuplot -persist  <<EOF
+set datafile separator ","
+ set view map
+set size square
+set title "System $SYSTEM
+splot "sys$SYSTEM.dat" using 1:2:3 with points palette pointsize 3 pointtype 7
+EOF
+
+;;
+
+esac
