@@ -29,9 +29,9 @@ cout << "Enter the voltage of the outer circle: ";
  double dx=1.0; //grid spacing
  double dy=1.0; //grid spacing
 
- double dt=0.1; //iteration step size
- double tmax=100.0; //iteration stop point
- int tstep = tmax/dt; //number of iterations
+//number of iterations now stop when ALL points on arbituary line change less than (error) each iteration
+ double error = 0.001; // points stop changing more than this, stop iteration
+ int errorcount=0;
 
  int xstep= (2*rv/dx)+1;
  int ystep = (2*rv/dy)+1;
@@ -50,7 +50,10 @@ cout << "Enter the voltage of the outer circle: ";
    }
  }
  
- for (int n=0; n<tstep;n++){
+ while(errorcount < xstep){ //while there are points that do not contribute to error count, iterations continue, when all points change less than error, iteration stops
+  
+   errorcount=0; //reset error count
+
  for (int j=1; j<(xstep); j++){
    for (int k=1;k<(ystep);k++){
      
@@ -60,12 +63,17 @@ cout << "Enter the voltage of the outer circle: ";
        
        //if array point smaller than radius of ground circle it equals v+ 
   else if ((pow((k-ceil((xstep)/2)),2) + pow((j-ceil((ystep)/2)),2))<= pow(rg,2)) 
-       unew[j][k]=0;      
-     
+       unew[j][k]=0;           
      else unew[j][k]=(0.25)*(u[j-1][k] + u[j+1][k] + u[j][k-1] + u[j][k+1]);
 
-	    }
+ }
  } 
+
+ for(int j=1; j<xstep; j++){
+ //if point on arbituary line has changed less than error, it gets added to error count
+   if ( abs(u[j][ystep/2] - unew[j][ystep/2]) < error)
+   errorcount+=1;
+   cout<<errorcount<<endl;}
 
  //reset boundary conditions
 for (int j=0; j<(xstep); j++){
@@ -77,7 +85,8 @@ for (int j=0; j<(xstep); j++){
        u[j][k]=unew[j][k];
  }
  }
- } 
+ 
+ }
 
  //print values to data file
   for ( int j = 0; j < xstep; j++ ) {
@@ -89,4 +98,3 @@ for (int j=0; j<(xstep); j++){
 
     return 0;
 }
-
