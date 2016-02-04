@@ -29,15 +29,18 @@ cout << "Enter the voltage of the outer circle: ";
  double dx=1.0; //grid spacing
  double dy=1.0; //grid spacing
 
-//number of iterations now stop when ALL points on arbituary line change less than (error) each iteration
- double error = 0.001; // points stop changing more than this, stop iteration
- int errorcount=0;
-
  int xstep= (2*rv/dx)+1;
  int ystep = (2*rv/dy)+1;
 
- double u[xstep][ystep]; //multidimensional array
- double unew[xstep][ystep];
+ //this section used for a set number of iterations
+ // int tstep = 5; //number of iterations
+
+ //this
+ double error = 0.0001; //when points stop changing more than this, stop iteration
+ int errorcount=0;
+
+ double u[xstep][ystep]; //multidimensional array, value of previous iterations
+ double unew[xstep][ystep]; // value of current iterations
 
  //boundary conditions 
  for (int j=0; j<(xstep); j++){
@@ -50,7 +53,7 @@ cout << "Enter the voltage of the outer circle: ";
    }
  }
  
- while(errorcount < xstep){ //while there are points that do not contribute to error count, iterations continue, when all points change less than error, iteration stops
+ while(errorcount < xstep-1){ //while there are points that do not contribute to error count, iterations continue, when all points change less than error, iteration stops
   
    errorcount=0; //reset error count
 
@@ -65,15 +68,17 @@ cout << "Enter the voltage of the outer circle: ";
   else if ((pow((k-ceil((xstep)/2)),2) + pow((j-ceil((ystep)/2)),2))<= pow(rg,2)) 
        unew[j][k]=0;           
      else unew[j][k]=(0.25)*(u[j-1][k] + u[j+1][k] + u[j][k-1] + u[j][k+1]);
-
  }
  } 
 
- for(int j=1; j<xstep; j++){
+
+
+ //section that calculates number of points that have cahnged by less than (error)
+for(int j=0; j<xstep; j++){
  //if point on arbituary line has changed less than error, it gets added to error count
    if ( abs(u[j][ystep/2] - unew[j][ystep/2]) < error)
-   errorcount+=1;
-   cout<<errorcount<<endl;}
+   errorcount+=1;}
+
 
  //reset boundary conditions
 for (int j=0; j<(xstep); j++){
@@ -82,10 +87,13 @@ for (int j=0; j<(xstep); j++){
      if ( j==0 || j==xstep || k==0 || k==ystep )
        u[j][k]=v0;
      else
-       u[j][k]=unew[j][k];
+       u[j][k]=unew[j][k]; 
  }
  }
  
+
+ 
+
  }
 
  //print values to data file
