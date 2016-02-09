@@ -5,13 +5,13 @@
 #include <vector>
 #include <fstream>
 
-//c++ program to calculate simple poisson eqn in cylindrical coords
+//c++ program to calculate problem 2
 
 int main()
 {
   using namespace std;
 
-  ofstream outf("Sample.dat");
+  ofstream outf("sys2.dat");
 
 cout << "Enter the voltage of the plates: "; 
   double v0 = 0;
@@ -29,12 +29,19 @@ cout << "Enter the radius of the inner circle: ";
   int r = 0;
  cin >> r;
 
+ cout << "Enter the acceptable prescision: ";
+ double error =0;
+ cin >> error;
+
  double dx=1.0; //grid spacing
  double dy=1.0; //grid spacing
 
- double dt=0.1; //iteration step size
- double tmax=1000.0; //iteration stop point
- int tstep = tmax/dt; //number of iterations
+ //double error = 0.001; //when points stop changing more than this, stop iteration
+ int errorcount=0;
+
+
+ //for set number of iterations
+ int tstep = 100; //number of iterations
 
  int xstep= d/dx;
  int ystep = h/dy;
@@ -61,8 +68,10 @@ cout << "Enter the radius of the inner circle: ";
 }
   }
 
- //Loop through iterations
- for (int n=0; n<tstep;n++){
+ while(errorcount < xstep-1){ 
+//while there are points that do not contribute to error count, iterations continue, when all points change less than error, iteration stops
+  
+   errorcount=0; //reset error count
 
  for (int j=1; j<(xstep+1); j++){
    for (int k=1;k<(ystep+1);k++){
@@ -75,6 +84,13 @@ cout << "Enter the radius of the inner circle: ";
 
 	    }
  }
+
+ //section that calculates number of points that have changed by less than (error)
+for(int j=0; j<xstep; j++){
+ //if point on arbituary line has changed less than error, it gets added to error count
+   if ( abs(u[j][ystep/2] - unew[j][ystep/2]) < error)
+   errorcount+=1;}
+
 
 for (int j=1; j<(xstep+1); j++){
    for (int k=1;k<(ystep+1);k++){
@@ -94,4 +110,3 @@ for (int j=1; j<(xstep+1); j++){
 
     return 0;
 }
-
