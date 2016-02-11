@@ -12,6 +12,7 @@ class Board
 {
 public:
 	vector<vector<tuple<double, bool>>> grid;
+	vector<vector<tuple<double, bool>>> new_grid;
 
 	void bmpInitialise(string bmp_file_name);
 	void jacobiUpdate();
