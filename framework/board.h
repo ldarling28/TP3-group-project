@@ -2,15 +2,18 @@
 #define GUARD_board_h
 
 #include <string>
+#include <vector>
 
 // board.h
 class Board
 {
 public:
-	Board(void);
+
+	std::vector < std::vector<std::tuple<double, bool>> > grid;
 	void jacobiUpdate();
 	void writeBoard(std::string);
-	void textInitialise(std::string);
+	void bmpInitialise(std::string);
+	bool iterateAgain(double);
 };
 
 #endif
