@@ -29,15 +29,19 @@ int main()
 	board.bmpInitialise(bmp_file_name);
 	cout << "Initialised the board" << endl; // Test
 
+	 board.jacobiUpdate();
+ cout << "First update complete" << endl; // Test
 
-		board.jacobiUpdate();
-		bool repeat = board.iterateAgain(precision);
-		while(repeat == true)
-		  {
+ //iterate while changes have not met precision threshold
+			bool repeat = board.iterateAgain(precision);
+			while(repeat == true)
+			  {
 
-		  board.jacobiUpdate;
-		  repeat = board.iterateAgain(precision);
-	   	  }
+			 board.jacobiUpdate();
+
+			  repeat = board.iterateAgain(precision);
+			 
+			  }
 
 	board.writeBoard(out_file_name);
 	return 0;
