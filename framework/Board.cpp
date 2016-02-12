@@ -12,7 +12,7 @@ class Board
 {
 public:
 	vector<vector<tuple<double, bool>>> grid;
-	vector<vector<tuple<double, bool>>> new_grid;
+  	vector<vector<tuple<double, bool>>> new_grid;
 
 	void bmpInitialise(string bmp_file_name);
 	void jacobiUpdate();
@@ -129,14 +129,14 @@ void Board::jacobiUpdate() {
 		}
 	}
 
-	// grid = new_grid
+	// grid = new_grid needs to be done after iteration check function
 	//copy(&new_grid[0][0], &new_grid[0][0] + grid_width*grid_height, &grid[0][0]);
 
-	//for (int i = 0; i < grid_width; ++i) {
-	//	for (int j = 0; j < grid_height; ++j) {				 
-	//		grid[i][j] = new_grid[i][j];
+	//	for (int i = 0; i < grid_width; ++i) {
+	//		for (int j = 0; j < grid_height; ++j) {				 
+	//			grid[i][j] = new_grid[i][j];
+	//		}
 	//	}
-	//}
 return;
 }
 
@@ -151,9 +151,12 @@ bool Board::iterateAgain (double precision){
 
 	for (int i = 0; i <= grid_width; ++i)	  {
 		for (int j = 0; j <= grid_height; ++j) {
-		  error = abs( grid[i][j] - new_grid[i][j] );
+		  error = abs( get<0>(grid[i][j]) - get<0>(new_grid[i][j]) );
 		  if (error <= precision)
-		    errorcount+=1;
+		    {
+		      errorcount+=1; //adds point to total points that meet precision threshold
+		    }
+		  grid[i][j] = new_grid[i][j]; // new grid becomes old grid for next iteration, this needs to be done after precision check
 	  }
 		}
 
@@ -162,6 +165,17 @@ bool Board::iterateAgain (double precision){
         if (errorcount == grid_width*grid_height){
 	  repeat= false;
 	}
+
+
+	// grid = new_grid
+	//copy(&new_grid[0][0], &new_grid[0][0] + grid_width*grid_height, &grid[0][0]);
+
+	//	for (int i = 0; i < grid_width; ++i) {
+	//		for (int j = 0; j < grid_height; ++j) {				 
+			  //			grid[i][j] = new_grid[i][j];
+	//		}
+	//	}
+
 	return repeat;
 	
 }
@@ -185,4 +199,3 @@ void Board::writeBoard(string ofilename) {
 
 	return;
 }
-
